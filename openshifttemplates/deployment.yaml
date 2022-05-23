@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: name-deployment
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  replicas: 3
+  selector:
+    matchLabels:
+      app: name-template
+  template:
+    metadata:
+      labels:
+        app: name-template
+    spec:
+      topologySpreadConstraints:
+       - maxSkew: 1
+         topologyKey: failure-domain.beta.kubernetes.io/zone
+         whenUnsatisfiable: DoNotSchedule
+         labelSelector:
+           matchExpressions:
+            - key: app
+              operator: In
+              values:
+              - name-template
+      containers:
+      - name: name-pod
+        image: openshift/hello-openshift
+        ports:
+        - containerPort: 8080

@@ -1,0 +1,105 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: high-availability-application
+  annotations:
+    openshift.io/display-name: "High Availability Application"
+    description: "This template deploys application by creating all the relevant objects in high availability architecture that is defined by OpenShift team"
+    openshift.io/provider-display-name: "IDFCTS"
+    iconClass: "icon-openshift"
+    tags: "application,nodejs,python,java"
+    openshift.io/support-url: "https://support.idf.cts"
+message: "Successfully deployed!"
+objects:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: ${name}-deployment
+  spec:
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+    replicas: 3
+    selector:
+      matchLabels:
+        app: ${name}-template
+    template:
+      metadata:
+        labels:
+          app: ${name}-template
+      spec:
+        topologySpreadConstraints:
+        - maxSkew: 1
+          whenUnsatisfiable: DoNotSchedule
+          topologyKey: failure-domain.beta.kubernetes.io/zone
+          labelSelector:
+            matchLabels:
+              app: ${name}-template
+        containers:
+        - name: ${name}-pod
+          image: ${image}
+          ports:
+          - containerPort: 8080
+          resources:
+            requests:
+              memory: ${requested_memory}Mi
+              cpu: ${requested_cpu}m
+            limits:
+              memory: ${memory_limit}Mi
+              cpu: ${cpu_limit}m
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: ${name}-service
+  spec:
+    type: ClusterIP
+    selector:                  
+      app: ${name}-template
+    ports:
+    - port: 8080
+      targetPort: 8080
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    name: ${name}-route
+  spec:
+    host: debug.openshift.cts
+    port:
+      targetPort: 8080
+    to:
+      kind: Service
+      name: ${name}-service
+parameters:
+  - name: name
+    displayName: Name
+    description: Application Name
+    required: true
+  - name: image
+    displayName: Image
+    description: Container Image
+    required: true
+  - name: port
+    name: Port
+    description: Container Listening Port
+    required: true
+  - name: DNS
+    displayName: DNS
+    description: Route DNS Address
+    required: true
+  - name: requested_cpu
+    displayName: Requested CPU (m units)
+    description: Requested cpu that openshift will garentee for your pod
+    required: true
+  - name: requested_ram
+    displayName: Requested RAM (Mi units)
+    description: Requested memory that openshift will garentee for your pod
+    required: true
+  - name: cpu_limit
+    displayName: CPU Limit (m units)
+    description: When your pod will use this amount of cpu the pod will evict by openshift
+    required: true
+  - name: memory_limit
+    displayName: RAM Limit (Mi units)
+    description: When your pod will use this amount of memory the pod will evict by openshift
+    required: true

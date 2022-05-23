@@ -1,0 +1,33 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: sample-template
+  annotations:
+    description: "sample template of simple deployment and service"
+    iconClass: "icon-redis"
+    tags: "database,nosql"
+objects:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: sample-deployment
+  spec:
+    replicas: 3
+    selector:
+      matchLabels:
+        app: sample-deployment
+    template:
+      metadata:
+        labels:
+          app: sample-deployment
+      spec:
+        containers:
+        - name: hello-openshift
+          image: ${IMAGE}
+          ports:
+          - containerPort: 80
+parameters:
+- description: Container image
+  from: '[A-Z0-9:/]'
+  generate: expression
+  name: IMAGE
