@@ -1,0 +1,7 @@
+name: helm-hello-world
+image: openshift/hello-openshift
+port: 8080
+requested_memory: 100
+requested_cpu: 100
+memory_limit: 200
+cpu_limit: 200

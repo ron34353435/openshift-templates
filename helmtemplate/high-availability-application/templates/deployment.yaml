@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Values.name}}-deployment
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  replicas: 3
+  selector:
+    matchLabels:
+      app: {{.Values.name}}-template
+  template:
+    metadata:
+      labels:
+        app: {{.Values.name}}-template
+    spec:
+      topologySpreadConstraints:
+      - maxSkew: 1
+        whenUnsatisfiable: DoNotSchedule
+        topologyKey: failure-domain.beta.kubernetes.io/zone
+        labelSelector:
+          matchLabels:
+            app: {{.Values.name}}-template
+      containers:
+      - name: {{.Values.name}}-pod
+        image: {{.Values.image}}
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: {{.Values.requested_memory}}Mi
+            cpu: {{.Values.requested_cpu}}m
+          limits:
+            memory: {{.Values.memory_limit}}Mi
+            cpu: {{.Values.cpu_limit}}m
