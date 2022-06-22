@@ -1,11 +1,11 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: {{.Values.name}}-route
+  name: {{.Values.applicationName}}-route
 spec:
-  host: debug.openshift.cts
+  host: {{.Values.network.externalDns}}
   port:
-    targetPort: 8080
+    targetPort: {{.Values.network.containerPort}}
   to:
     kind: Service
-    name: {{.Values.name}}-service
+    name: {{.Values.applicationName}}-service

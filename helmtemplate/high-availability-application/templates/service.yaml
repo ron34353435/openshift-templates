@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{.Values.name}}-service
+  name: {{.Values.applicationName}}-service
 spec:
   type: ClusterIP
   selector:
-    app: {{.Values.name}}-template
+    app: {{.Values.applicationName}}-template
   ports:
-  - port: 8080
-    targetPort: 8080
+  - port: {{.Values.network.servicePor}}
+    targetPort: {{.Values.network.containerPort}}

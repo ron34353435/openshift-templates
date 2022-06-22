@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{.Values.name}}-deployment
+  name: {{.Values.applicationName}}-deployment
 spec:
   strategy:
     rollingUpdate:
@@ -10,11 +10,11 @@ spec:
   replicas: 3
   selector:
     matchLabels:
-      app: {{.Values.name}}-template
+      app: {{.Values.applicationName}}-template
   template:
     metadata:
       labels:
-        app: {{.Values.name}}-template
+        app: {{.Values.applicationName}}-template
     spec:
       topologySpreadConstraints:
       - maxSkew: 1
@@ -22,16 +22,16 @@ spec:
         topologyKey: failure-domain.beta.kubernetes.io/zone
         labelSelector:
           matchLabels:
-            app: {{.Values.name}}-template
+            app: {{.Values.applicationName}}-template
       containers:
-      - name: {{.Values.name}}-pod
-        image: {{.Values.image}}
+      - name: {{.Values.applicationName}}-pod
+        image: {{.Values.image.name}}:{{.Values.image.tag}}
         ports:
-        - containerPort: 8080
+        - containerPort: {{.Values.network.containerPort}}
         resources:
           requests:
-            memory: {{.Values.requested_memory}}Mi
-            cpu: {{.Values.requested_cpu}}m
+            memory: {{.Values.resources.requestedMemory}}Mi
+            cpu: {{.Values.resources.requestedCpu}}m
           limits:
-            memory: {{.Values.memory_limit}}Mi
-            cpu: {{.Values.cpu_limit}}m
+            memory: {{.Values.resources.memoryLimit}}Mi
+            cpu: {{.Values.resources.cpuLimit}}m
