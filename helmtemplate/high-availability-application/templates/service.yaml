@@ -7,5 +7,5 @@ spec:
   selector:
     app: {{.Values.applicationName}}-template
   ports:
-  - port: {{.Values.network.servicePor}}
+  - port: {{.Values.network.servicePort}}
     targetPort: {{.Values.network.containerPort}}

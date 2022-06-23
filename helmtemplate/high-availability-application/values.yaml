@@ -4,7 +4,7 @@ image:
   tag: ''
 network:
   containerPort: ''
-  servicePort: ''
+  servicePort: '' 
   externalDns: ''
 resources:
   requestedMemory: 100

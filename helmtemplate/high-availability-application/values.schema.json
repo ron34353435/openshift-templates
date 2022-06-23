@@ -1,0 +1,61 @@
+{
+    "properties": {
+        "applicationName": {
+            "description": "Sets the objects name",
+	    "type": "string"
+        },
+	"image": {
+            "description": "Sets the image that the application will build from",
+	    "properties": {
+              "name":{
+	        "description": "Image name",
+		"type": "string"
+	      },
+	      "tag":{
+                "description": "Image tag",
+                "type": "string"
+              }
+	    }
+	},
+        "network": {
+            "description": "Sets the application network such as ports and DNS.",
+            "properties": {
+              "containerPort":{
+                "description": "Container port (the port that the application listen to)",
+                "type": "integer"
+              },
+              "servicePort":{
+                "description": "Service port (the port that the service listen to)",
+                "type": "integer"
+              },
+              "externalDns":{
+                "description": "DNS record that the application use",
+                "type": "string"
+              }
+            }
+        },
+	"resources": {
+            "description": "Sets the application resources",
+            "properties": {
+              "requestedMemory":{
+                "description": "How much memory allocate to the pod (Mi)",
+                "type": "integer"
+              },
+	      "requestedCpu":{
+                "description": "How much cpu allocate to the pod (m)",
+                "type": "integer"
+              },
+	      "memoryLimit":{
+                "description": "Maximum amount of memory that the pod can to consume (Mi)",
+                "type": "integer"
+              },
+              "cpuLimit":{
+                "description": "Maximum amount of cpu that the pod can to consume (m)",
+                "type": "integer"
+              }
+            }
+        }
+    },
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object"
+}
