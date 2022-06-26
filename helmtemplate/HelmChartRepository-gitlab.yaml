@@ -1,0 +1,9 @@
+apiVersion: helm.openshift.io/v1beta1
+kind: HelmChartRepository
+metadata:
+  name: gitlab
+spec:
+ # optional name that might be used by console
+ # name: <chart-display-name>
+  connectionConfig:
+    url: https://gitlab.com/api/v4/projects/37204006/packages/helm/stable

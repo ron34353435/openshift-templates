@@ -1,0 +1,9 @@
+apiVersion: helm.openshift.io/v1beta1
+kind: HelmChartRepository
+metadata:
+  name: quay-helm-repo
+spec:
+ # optional name that might be used by console
+ # name: <chart-display-name>
+  connectionConfig:
+    url: https://example-registry-quay-quay.apps.ocp-blackedition.openshift.cts/quayadmin/helm/
